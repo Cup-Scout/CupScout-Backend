@@ -1,13 +1,51 @@
 import pool from '../config/db.js';
 
-// 모든 카페 조회
-export const getCafes = async () => {
+export const getAllCafes = async () => {
   const [rows] = await pool.query('SELECT * FROM cafe');
   return rows;
 };
 
-// 특정 카페 조회
 export const getCafeById = async (id) => {
   const [rows] = await pool.query('SELECT * FROM cafe WHERE id = ?', [id]);
   return rows[0];
+};
+
+export const getCafesByIds = async (ids) => {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("Invalid or empty ID list provided");
+  }
+
+  const placeholders = ids.map(() => '?').join(',');
+  const query = `SELECT * FROM cafe WHERE id IN (${placeholders})`;
+
+  const [rows] = await pool.query(query, ids);
+  return rows;
+};
+
+export const getCafeOperatingHoursById = async (id) => {
+  const [rows] = await pool.query('SELECT * FROM cafe_operating_info WHERE id = ?', [id]);
+  return rows.length ? rows[0] : null;
+};
+
+export const getCafeOperatingHoursByIds = async (ids) => {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error("Invalid or empty ID list provided");
+  }
+
+  const placeholders = ids.map(() => "?").join(",");
+  const query = `SELECT * FROM cafe_operating_info WHERE id IN (${placeholders})`;
+  
+  const [rows] = await pool.query(query, ids);
+  return rows;
+};
+
+export const getCafeOperatingHoursByDay = async (id, openColumn, closeColumn) => {
+  const query = `
+    SELECT open_24h, ${openColumn} AS open, ${closeColumn} AS close
+    FROM cafe_operating_info 
+    WHERE id = ?;
+  `;
+
+  const [rows] = await pool.query(query, [id]);
+  return rows.length ? rows[0] : null;
 };
