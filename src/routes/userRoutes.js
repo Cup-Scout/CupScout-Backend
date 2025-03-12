@@ -1,5 +1,10 @@
 import express from 'express';
+import { getAllCafes, getCafe } from '../controllers/cafeController.js';
 import {
+  getAllComments,
+  getComment,
+  deleteComment,
+  createComment,
   getAllCafes,
   getCafes, 
   getCafe,
@@ -14,6 +19,11 @@ import {
 } from '../controllers/categoryController.js';
 
 const router = express.Router();
+
+router.get('/comments', getAllComments);
+router.get('/comments/:id', getComment);
+router.patch('/comments/:id', deleteComment);
+router.post('/comments', createComment);
 
 // 카페
 router.get('/cafes', (req, res) => {
