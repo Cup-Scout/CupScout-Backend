@@ -2,14 +2,18 @@ import pool from '../config/db.js';
 
 //: DB에서 모든 댓글 조회
 export const getComments = async () => {
-  const [rows] = await pool.query('SELECT * FROM comment');
+  const [rows] = await pool.query('SELECT * FROM comment WHERE deleted = 0');
   return rows;
 };
 
 //: DB에서 특정 댓글 조회
 export const getCommentById = async (id) => {
-  const [rows] = await pool.query('SELECT * FROM comment WHERE id = ?', [id]);
-  return rows[0];
+  //* deleted를 체크해서 삭제 여부 확인
+  const [rows] = await pool.query(
+    'SELECT * FROM comment WHERE id = ? AND deleted = 0',
+    [id],
+  );
+  return rows[0] || null;
 };
 
 //: DB에서 댓글 삭제
