@@ -8,11 +8,6 @@ import {
   getCafeHoursByDay,
 } from '../controllers/cafeController.js';
 
-import {
-  getAllCategories,
-  getCafesByCategoryId,
-} from '../controllers/categoryController.js';
-
 const cafeRouter = express.Router();
 
 // 카페
@@ -23,9 +18,5 @@ cafeRouter.get('/cafes/:id', getCafe);
 cafeRouter.get('/cafes/:id/hours', getCafeHours);
 cafeRouter.get('/cafes-hours', getCafesHours); // url 변경 가능성
 cafeRouter.get('/cafes/:id/hours/:day', getCafeHoursByDay);
-
-// 카테고리
-cafeRouter.get('/categories', getAllCategories);
-cafeRouter.get('/categories/:id/cafes', getCafesByCategoryId);
 
 export default cafeRouter;

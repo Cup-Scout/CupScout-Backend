@@ -16,7 +16,10 @@ export const findAllComments = async () => {
 export const findCommentById = async (id) => {
   //: DB에서 데이터 조회하는 함수 호출 후 리턴
   const comment = await getCommentById(id);
-  if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
+  if (comment.deleted === 1) {
+    throw { status: 404, message: '댓글을 찾을 수 없습니다' };
+  }
+
   return comment;
 };
 
@@ -28,7 +31,7 @@ export const findDeleteComment = async (id, password) => {
   }
   const storedHash = comment.password;
   const isMatch = await bcrypt.compare(password, storedHash);
-  if (!isMatch) throw { status: 404, message: '비밀번호가 일치하지 않습니다.' };
+  if (!isMatch) throw { status: 401, message: '비밀번호가 일치하지 않습니다.' };
   const result = await deleteCommentById(id);
   return result;
 };

@@ -10,6 +10,7 @@ import bcrypt from 'bcrypt';
 export const getAllComments = async (req, res) => {
   try {
     const comments = await findAllComments();
+    //: deleted가 0인 댓글이 없다면 빈배열([]) 반환
     res.json(comments);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -19,9 +20,10 @@ export const getAllComments = async (req, res) => {
 export const getComment = async (req, res) => {
   try {
     const comment = await findCommentById(req.params.id);
+    if (!comment) res.status(404).json({ error: '댓글을 찾을 수 없습니다.' });
     res.json(comment);
   } catch (err) {
-    res.status(404).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -37,9 +39,8 @@ export const deleteComment = async (req, res) => {
   } catch (err) {
     if (err.status) {
       res.status(err.status).json({ success: false, message: err.message });
-    } else {
-      res.status(500).json({ success: false, message: '서버 오류 발생' });
     }
+    res.status(500).json({ success: false, message: '서버 오류 발생' });
   }
 };
 
