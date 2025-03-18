@@ -3,6 +3,7 @@ import {
   getAllCafes,
   getCafes,
   getCafe,
+  getCafesByName,
   getCafeHours,
   getCafesHours,
   getCafeHoursByDay,
@@ -12,7 +13,13 @@ const cafeRouter = express.Router();
 
 // 카페
 cafeRouter.get('/cafes', (req, res) => {
-  req.query.ids ? getCafes(req, res) : getAllCafes(req, res);
+  if (req.query.ids) {
+    getCafes(req, res);
+  } else if (req.query.name) {
+    getCafesByName(req, res);
+  } else {
+    getAllCafes(req, res);
+  }
 });
 cafeRouter.get('/cafes/:id', getCafe);
 cafeRouter.get('/cafes/:id/hours', getCafeHours);
