@@ -2,6 +2,7 @@ import {
   getAllCafes as getAllCafesService,
   getCafeById,
   getCafesByIds,
+  getCafesByName as getCafesByNameService,
   getCafeHoursById,
   getCafeHoursByIds,
   getCafeHoursByDay as getCafeHoursByDayService
@@ -39,6 +40,22 @@ export const getCafes = async (req, res) => {
     const idArray = ids.split(',').map(id => parseInt(id.trim(), 10));
     const cafes = await getCafesByIds(idArray);
 
+    res.json(cafes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// 특정 이름을 포함하는 카페 조회
+export const getCafesByName = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    if (!name) {
+      return res.status(400).json({ error: "Please enter a search term." });
+    }
+
+    const cafes = await getCafesByNameService(name);
     res.json(cafes);
   } catch (err) {
     res.status(500).json({ error: err.message });

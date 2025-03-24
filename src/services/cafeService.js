@@ -2,6 +2,7 @@ import {
   getAllCafes as getAllCafesModel,
   getCafesByIds as getCafesByIdsModel,
   getCafeById as getCafeByIdModel,
+  findCafesByName,
   getCafeOperatingHoursById as getCafeOperatingHoursByIdModel,
   getCafeOperatingHoursByIds as getCafeOperatingHoursByIdsModel,
   getCafeOperatingHoursByDay as getCafeOperatingHoursByDayModel
@@ -55,6 +56,26 @@ export const getCafeHoursByIds = async (ids) => {
   return cafes.map(formatCafeHours);
 };
 
+// 특정 이름을 포함하는 카페 조회
+export const getCafesByName = async (name) => {
+  try {
+    if (!name) {
+      throw new Error("Search term cannot be empty.");
+    }
+
+    // 모든 공백 제거
+    const sanitizedSearchTerm = name.replace(/\s/g, "");
+
+    // 한글, 영어, 숫자 이외의 문자가 포함된 경우 검색 불가
+    if (!/^[가-힣a-zA-Z0-9]+$/.test(sanitizedSearchTerm)) {
+      throw new Error("Search term can only contain Korean, English, and numbers.");
+    }
+
+    return await findCafesByName(sanitizedSearchTerm);
+  } catch (error) {
+    throw new Error(`An error occurred while retrieving cafes: ${error.message}`);
+  }
+};
 // 특정 카페의 특정 요일 운영 시간 조회
 export const getCafeHoursByDay = async (id, day) => {
   const dayOpenColumn = `${day}_open`;

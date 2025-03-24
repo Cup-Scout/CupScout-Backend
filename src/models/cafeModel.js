@@ -22,6 +22,13 @@ export const getCafesByIds = async (ids) => {
   return rows;
 };
 
+export const findCafesByName = async (name) => {
+  // DB에서 대소문자 구분 없이 검색
+  const [rows] = await pool.query("SELECT * FROM cafe WHERE LOWER(name) LIKE LOWER(?)", [`%${name}%`]
+  );
+  return rows;
+};
+
 export const getCafeOperatingHoursById = async (id) => {
   const [rows] = await pool.query('SELECT * FROM cafe_operating_info WHERE id = ?', [id]);
   return rows.length ? rows[0] : null;
