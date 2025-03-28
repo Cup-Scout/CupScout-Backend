@@ -23,12 +23,10 @@ export const getCafesByIds = async (ids) => {
 };
 
 export const findCafesByName = async (name) => {
-  // DB에서 대소문자 구분 없이 검색
-  const [rows] = await pool.query("SELECT * FROM cafe WHERE LOWER(name) LIKE LOWER(?)", [`%${name}%`]
-  );
+  // DB에서 공백 제거 + 대소문자 무시 검색
+  const [rows] = await pool.query(`SELECT * FROM cafe WHERE LOWER(REPLACE(name, ' ', '')) LIKE LOWER(?)`, [`%${name}%`]);
   return rows;
 };
-
 export const getCafeOperatingHoursById = async (id) => {
   const [rows] = await pool.query('SELECT * FROM cafe_operating_info WHERE id = ?', [id]);
   return rows.length ? rows[0] : null;
