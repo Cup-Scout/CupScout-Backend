@@ -1,9 +1,9 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cafeRouter from './routes/cafeRoute.js';
-import commentRouter from './routes/commentRoute.js';
-import categoryRouter from './routes/categoryRoute.js';
-import cors from 'cors';
+import express from "express";
+import dotenv from "dotenv";
+import cafeRouter from "./routes/cafeRoute.js";
+import commentRouter from "./routes/commentRoute.js";
+import categoryRouter from "./routes/categoryRoute.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -12,16 +12,19 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: 'http://localhost:5173', // 허용할 도메인
-    methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type,Authorization',
-  }),
+    origin: [
+      "http://localhost:5173",
+      "http://ec2-43-201-166-178.ap-northeast-2.compute.amazonaws.com/cafe",
+    ], // 허용할 도메인
+    methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization",
+  })
 );
 
 //: 라우터 연결
-app.use('/api', cafeRouter);
-app.use('/api', commentRouter);
-app.use('/api', categoryRouter);
+app.use("/api", cafeRouter);
+app.use("/api", commentRouter);
+app.use("/api", categoryRouter);
 
 //: 서버 실행
 const PORT = process.env.PORT || 3002;
