@@ -42,8 +42,9 @@ export const deleteComment = async (req, res) => {
   } catch (err) {
     if (err.status) {
       res.status(err.status).json({ success: false, message: err.message });
+    } else {
+      res.status(500).json({ success: false, message: "서버 오류 발생" });
     }
-    res.status(500).json({ success: false, message: "서버 오류 발생" });
   }
 };
 
