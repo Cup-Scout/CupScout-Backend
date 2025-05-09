@@ -8,11 +8,23 @@ import bcrypt from "bcrypt";
 
 //* 카페별 모든 댓글 조회
 export const getAllComments = async (req, res) => {
+  const DEFAULT_START_PAGE = 1;
+  const cafeId = req.params.cafeId;
+  const pageInfo = req.query;
+  const page = parseInt(pageInfo.page);
+  let pageSize = parseInt(pageInfo.pageSize);
+
   try {
-    const cafeId = req.params.cafeId;
-    const comments = await findAllComments(cafeId);
+    if (!pageSize) pageSize = DEFAULT_START_PAGE;
+    //! 에러 객체 한번에 변경하기
+    if (!cafeId || !page) throw new Error("잘못된 요청입니다.");
+    const { comments, totalCount, totalPages } = await findAllComments(
+      cafeId,
+      page,
+      pageSize
+    );
     //: deleted가 0인 댓글이 없다면 빈배열([]) 반환
-    res.json(comments);
+    res.json({ comments, totalPages });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
