@@ -1,12 +1,22 @@
 import pool from "../config/db.js";
 
 //* 카페별 모든 댓글 조회
-export const getComments = async (cafeId) => {
+export const getComments = async (cafeId, offset, limit) => {
   const [rows] = await pool.query(
-    "SELECT * FROM comment WHERE cafe_id = ? AND deleted = 0",
+    "SELECT * FROM comment WHERE cafe_id = ? AND deleted = 0 ORDER BY created DESC LIMIT ? OFFSET ?",
+    [cafeId, limit, offset]
+  );
+
+  const [[{ count }]] = await pool.query(
+    "SELECT COUNT(*) AS count FROM comment WHERE cafe_id = ? AND deleted = 0",
     [cafeId]
   );
-  return rows;
+
+  return {
+    comments: rows,
+    totalCount: count,
+    totalPages: Math.ceil(count / limit),
+  };
 };
 
 //* 단건 댓글 조회

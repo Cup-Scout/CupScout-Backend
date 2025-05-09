@@ -9,9 +9,11 @@ import bcrypt from "bcrypt";
 import { getCafeById } from "../models/cafeModel.js";
 
 //* 카페별 모든 댓글 조회
-export const findAllComments = async (cafeId) => {
+export const findAllComments = async (cafeId, page, pageSize) => {
   //: DB에서 데이터 조회하는 함수 호출 후 리턴
-  return await getComments(cafeId);
+  const offset = (page - 1) * pageSize;
+  let limit = pageSize;
+  return await getComments(cafeId, offset, limit);
 };
 
 //* 댓글 단건 조회
