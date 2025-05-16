@@ -26,6 +26,10 @@ app.use("/api", cafeRouter);
 app.use("/api", commentRouter);
 app.use("/api", categoryRouter);
 
+app.use("/api/cache", cafeRouter);
+app.use("/api/cache", commentRouter);
+app.use("/api/cache", categoryRouter);
+
 //: 서버 실행
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
